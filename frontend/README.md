@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VMS Lite — Frontend
+
+The frontend for the **Visitor Management System** intern project.  
+Built with **Next.js 16**, **TypeScript**, **Tailwind CSS v4**, and **Shadcn UI**.
+
+> **New here?** Read the root [README.md](../README.md) first — it covers prerequisites, setup, and the full project overview.
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Set up Shadcn UI (first time only)
+
+```bash
+npx shadcn@latest init
+```
+
+Follow the prompts to configure your components directory and style preferences.
+
+### 3. Install React Hook Form
+
+```bash
+npm install react-hook-form
+```
+
+### 4. Configure your environment
+
+```bash
+cp .env.example .env.local
+```
+
+The default `.env.local` points to the **json-server mock** at `http://localhost:5000`. No edits needed to start development. You will only change this in Sprint 4 when integrating with the real backend.
+
+### 5. Start the mock API (in a separate terminal)
+
+```bash
+npx json-server --watch db.json --port 5000
+```
+
+Verify it's running by opening `http://localhost:5000/visitors` — you should see 4 pre-seeded visitors.
+
+### 6. Start the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at **http://localhost:3000**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+frontend/
+├── src/
+│   └── app/
+│       ├── layout.tsx        # Root layout (fonts, global styles)
+│       └── page.tsx          # Entry page
+├── db.json                   # json-server seed data (mock backend)
+├── .env.example              # Environment variable template
+└── package.json
+```
 
-To learn more about Next.js, take a look at the following resources:
+As you build out the sprints, you'll add:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/
+│   ├── page.tsx              # Reception Dashboard
+│   └── register/
+│       └── page.tsx          # Visitor Registration Form
+├── components/
+│   ├── VisitorForm.tsx       # Registration form component
+│   └── VisitorTable.tsx      # Dashboard table component
+└── lib/
+    └── apiClient.ts          # Single API client (all fetch calls go here)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Key Libraries
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Library | Purpose | Docs |
+|---------|---------|------|
+| Next.js 16 | React framework & routing | https://nextjs.org/docs |
+| Shadcn UI | Pre-built accessible components | https://ui.shadcn.com |
+| React Hook Form | Form state & validation | https://react-hook-form.com |
+| Tailwind CSS v4 | Utility-first styling | https://tailwindcss.com/docs |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Sprint Checklist
+
+See [Instructions.md](../Instructions.md) for the full sprint breakdown with task-by-task checklists.
+
+| Sprint | Goal |
+|--------|------|
+| 1 — Foundation | Setup, mock server, `apiClient.ts` |
+| 2 — Registration | Visitor registration form |
+| 3 — Dashboard | Visitor table with check-in/out actions |
+| 4 — Integration | Switch to real backend, end-to-end testing |
+
+---
+
+## Scripts
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run start    # Run production build
+npm run lint     # Run ESLint
+```
+
+---
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_API_URL` | Base URL for all API calls. Defaults to `http://localhost:5000` (mock). Change to `http://localhost:4000` for Sprint 4 integration. |
