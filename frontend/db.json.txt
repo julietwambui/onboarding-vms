@@ -1,0 +1,14 @@
+{
+  "visitors": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "purpose": "Business Meeting"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "purpose": "Delivery"
+    }
+  ]
+}

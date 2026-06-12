@@ -21,16 +21,25 @@ import Link from "next/link";
 
 export default function DashboardPage() {
   const [visitors, setVisitors] = useState<Visitor[]>([]);
-
-  // TODO: Use useEffect to fetch all visitors from GET /visitors on mount
+  async function fetchVisitors(){
+    const data=await apiClient.get("/visitors");
+    setVisitors(data);
+  }
+ useEffect(()=>{
+  fetchVisitors();
+ }[]);
   // Store the result in the visitors state
 
   async function handleCheckIn(id: string) {
+    await apiClient.put('/visitors/${id}/checkin');
+    fetchVisitors();
     // TODO: Call PUT /visitors/:id/checkin via apiClient
     // After success, refresh the visitors list
   }
 
   async function handleCheckOut(id: string) {
+    await apiClient.put('/visitors/${id}/checkout');
+    fetchVisitors();
     // TODO: Call PUT /visitors/:id/checkout via apiClient
     // After success, refresh the visitors list
   }
@@ -39,9 +48,22 @@ export default function DashboardPage() {
     <main>
       <div>
         <h1>Reception Dashboard</h1>
+        <Link href="/register">
+        Register Visitor</Link>
         {/* TODO: Add a link/button to navigate to the registration page */}
       </div>
+       <table>
+        <thead>
+          <tr>
+            <th>Full name </th>
+            <th>Purpose</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+       </table>
 
+       
       {/* TODO: Render the visitors table */}
       {/* Each row should show: fullName, purpose, status badge, and action buttons */}
       {/* Conditionally render "Check In" only for PENDING visitors */}

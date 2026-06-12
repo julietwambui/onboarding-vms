@@ -26,7 +26,13 @@ export default function RegisterPage() {
     formState: { errors, isSubmitting },
   } = useForm<CreateVisitorPayload>();
 
-  async function onSubmit(data: CreateVisitorPayload) {
+  async function onSubmit(data: CreateVisitorPayload)
+    try{
+      await apiClient.post("/visitors,"data);
+      alert("Visitor registered ")
+
+    
+  {
     // TODO: Call apiClient.post("/visitors", data)
     // On success: show a success message and reset the form
     // On failure: show an error message
