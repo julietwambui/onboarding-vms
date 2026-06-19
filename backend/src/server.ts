@@ -14,7 +14,7 @@ app.use(express.json());
 // e.g. app.use("/visitors", visitorRouter);
 
 app.get("/health", (_req, res) => {
-  // TODO: Return a JSON response confirming the server is running
+   res.json({ status: "ok" });
 });
 
 // ── Start ─────────────────────────────────────────────────
