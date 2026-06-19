@@ -1,15 +1,4 @@
 // VisitorTable Component — Sprint 3
-//
-// 👤 Frontend Intern Task
-//
-// A reusable table component that displays a list of visitors.
-// This component is responsible ONLY for rendering the table.
-// It should NOT fetch data or call the API directly.
-//
-// Props:
-//   visitors   — the array of visitors to display (passed in from the page)
-//   onCheckIn  — called with the visitor's id when "Check In" is clicked
-//   onCheckOut — called with the visitor's id when "Check Out" is clicked
 "use client"
 import { Visitor } from "@/types/visitor";
 import{Button} from"@/components/ui/button";
@@ -53,10 +42,10 @@ export default function VisitorTable({
                   <Badge
                   className={
                     visitor.status==="PENDING"
-                    ? "bg-blue-500 text-white"
+                    ? "bg-yellow-500 text-white"
                     :visitor.status==="CHECKED_IN"
                     ?"bg-green-600 text-white"
-                    :"bg-red-600 text-white"
+                    :"bg-grey-600 text-white"
                   }
                   >
                   {visitor.status}
@@ -86,20 +75,7 @@ export default function VisitorTable({
   );
 }
     
-            {/* TODO: Render visitor.fullName in a <td> */}
-
-            {/* TODO: Render visitor.purpose in a <td> */}
-
-            {/* TODO: Render a status badge in a <td> */}
-            {/* Use distinct colours: PENDING = yellow, CHECKED_IN = green, CHECKED_OUT = grey */}
-
-            
-              {/* TODO: Show "Check In" button ONLY if visitor.status === "PENDING" */}
-              {/* onClick={() => onCheckIn(visitor.id)} */}
-
-              {/* TODO: Show "Check Out" button ONLY if visitor.status === "CHECKED_IN" */}
-              {/* onClick={() => onCheckOut(visitor.id)} */}
-            
+      
           
       
       
