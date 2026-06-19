@@ -1,10 +1,3 @@
-// DRY Principle: All API calls in the app go through this single client.
-// Never call fetch() directly inside a React component or page.
-//
-// Import and use like this:
-//   import { apiClient } from "@/lib/apiClient";
-//   const visitors = await apiClient.get("/visitors");
-
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const apiClient = {
@@ -12,19 +5,13 @@ export const apiClient = {
     const res=await fetch(`${BASE_URL}${path}`);
 
     if(!res.ok){
-      throw new Error(`GET ${path}failed`);
+      const text=await res.text();
+      console.log("GET ERROR:", res.status, text);
+      throw new Error(`GET ${path} failed`);
     }
     return res.json();
   },
-  /**
-   * Make a GET request to the given path.
-   * TODO: Implement using fetch(). Return the parsed JSON response.
-   */
-  /**
-  
-   * Make a POST request with a JSON body to the given path.
-   * TODO: Implement using fetch() with method "POST" and correct headers.
-   */
+ 
   post:async(path:string,body:unknown) =>{
     const res=await fetch(`${BASE_URL}${path}`,{
     method:"POST",
@@ -34,17 +21,25 @@ export const apiClient = {
     body:JSON.stringify(body),
   });
   if(!res.ok){
-    throw new Error(`POST${path} failed`);
+    const text=await res.text();
+    console.log("POST ERROR:", res.status,text);
+    throw new Error(`POST ${path} failed`);
   }
   return res.json();
 },
 
- put:async (path:string)=>{
+ put:async (path:string,body?:unknown)=>{
   const res=await fetch(`${BASE_URL}${path}`,{
   method:"PUT",
+  headers:{
+    "Content-Type":"application/json",
+  },
+ body: body !==undefined ? JSON.stringify(body) : undefined,
  });
  if(!res.ok){
-  throw new Error(`PUT${path}failed`);
+  const text=await res.text();
+  console.log("PUT ERROR:", res.status, text);
+  throw new Error(`PUT ${path} failed`);
  }
  return res.json();
 },
