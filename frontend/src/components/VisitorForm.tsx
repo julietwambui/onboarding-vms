@@ -1,7 +1,8 @@
 // VisitorForm Component — Sprint 2
 "use client";
-import {useState} from "react";
+import {useState ,useEffect} from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { CreateVisitorPayload } from "@/types/visitor";
 import { apiClient } from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ interface VisitorFormProps {
 export default function VisitorForm({ onSuccess }: VisitorFormProps) {
   const [success,setSuccess]=useState("")
   const [errorMessage,setErrorMessage]=useState("")
+  const router = useRouter();
 
   const {
     register,
@@ -22,6 +24,13 @@ export default function VisitorForm({ onSuccess }: VisitorFormProps) {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<CreateVisitorPayload>();
+
+  useEffect(() => {
+    if (success) {
+      router.push("/dashboard");
+    }
+  }, [success, router]);
+
 
   async function onSubmit(data: CreateVisitorPayload) {
     try{
@@ -44,6 +53,13 @@ export default function VisitorForm({ onSuccess }: VisitorFormProps) {
   }
 
   return (
+    <div className="min-h-screen w-full flex items-center justify-center 
+    bg-gradient-to-br from-indigo-600 to-blue-500 p-4">
+      <div className="w-full max-w-md">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white mb-2">Visitor Registration</h1>
+          <p className="text-indigo-200">Please fill in the details below.</p>
+        
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
       <div className="space-y-2">
@@ -52,6 +68,7 @@ export default function VisitorForm({ onSuccess }: VisitorFormProps) {
         id="fullName"
         type="text"
         placeholder="Enter full name"
+        className="bg-white text-black"
         {...register("fullName", {
           required: "Full name is required"})}
         />
@@ -68,6 +85,7 @@ export default function VisitorForm({ onSuccess }: VisitorFormProps) {
         id="purpose"
         type="text"
         placeholder="Enter purpose"
+        className="bg-white text-black"
         {...register("purpose", {required:"Purpose is required"})}
         />
         {errors.purpose && (
@@ -89,10 +107,16 @@ export default function VisitorForm({ onSuccess }: VisitorFormProps) {
         </p>
       )}
 
-      <Button type="submit" disabled={isSubmitting}>
+      <Button type="submit" disabled={isSubmitting}
+      className="w-full py-6 rounded-full bg-white text-indigo-600 hover:bg-indigo-50
+      font-bold transition-all"
+      >
       {isSubmitting ? "Registering..." : "Register Visitor"}
       </Button>
       </form>     
+     </div>
+  </div>
+  </div>
   );
   }
 
