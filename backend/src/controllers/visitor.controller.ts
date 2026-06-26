@@ -1,41 +1,56 @@
 import { Request, Response } from "express";
-// TODO: Import your service functions from visitor.service.ts
+import {
+  findAll,
+  create,
+  checkIn,
+  checkOut,
+}from "../services/visitor.service";
 
-/**
- * GET /visitors
- * Should return all visitors as a JSON array.
- */
+
 export async function getAllVisitors(_req: Request, res: Response) {
-  // TODO: Call the service to retrieve all visitors and send them in the response
-  // Handle errors with an appropriate HTTP status code
-}
-
-/**
- * POST /visitors
- * Should create a new visitor. Body: { fullName, purpose }
- */
+    try{
+      const visitors=await findAll();
+      res.status(200).json(visitors);
+    }catch (error) {
+      console.error("Error fetching visitors",error);
+      res.status(500).json({message:"Failed to fatch visitors"});
+    }
+   }
+  
 export async function createVisitor(req: Request, res: Response) {
-  // TODO: Extract fullName and purpose from req.body
-  // TODO: Call the service to create the visitor
-  // Respond with HTTP 201 on success
-}
+  try{
+    const{fullName,purpose}=req.body;
+    const newVisitor=await create({
+      fullName,
+      purpose,
+    });
+    res.status(201).json(newVisitor);
+  }catch (error){
+    console.error("Error creating visitor:",error);
+    res.status(500).json({message:"Failed to create visitor"});
+  }
+    }
 
-/**
- * PUT /visitors/:id/checkin
- * Should mark the visitor as CHECKED_IN.
- */
 export async function checkInVisitor(req: Request, res: Response) {
-  // TODO: Get the visitor id from req.params
-  // TODO: Call the service to check in the visitor
-  // Return 404 if the visitor does not exist
-}
+  try{
+    const {id} = req.params as {id:string};
+    const updatedVisitor=await checkIn(id);
 
-/**
- * PUT /visitors/:id/checkout
- * Should mark the visitor as CHECKED_OUT.
- */
+    res.status(200).json(updatedVisitor);
+  }catch (error) {
+    console.error("Error checking in visitor:",error);
+    res.status(404).json({message:"Visitor not found"});
+  }
+  }
+
 export async function checkOutVisitor(req: Request, res: Response) {
-  // TODO: Get the visitor id from req.params
-  // TODO: Call the service to check out the visitor
-  // Return 404 if the visitor does not exist
-}
+  try{
+    const {id} =req.params as {id:string};
+    const updatedVisitor =await checkOut(id);
+    res.status(200).json(updatedVisitor);
+  }catch (error){
+    console.error("Error checking out visitor:",error);
+    res.status(404).json({message:"Visitor not found"});
+  }
+  }
+  

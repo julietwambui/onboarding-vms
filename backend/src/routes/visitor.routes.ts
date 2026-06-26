@@ -1,18 +1,26 @@
 import { Router } from "express";
-
-// TODO: Import your controller functions from visitor.controller.ts
-// TODO: Import your validation middleware from validation.middleware.ts
+import {
+    getAllVisitors,
+    createVisitor,
+    checkInVisitor,
+    checkOutVisitor,
+} from "../controllers/visitor.controller";
+import { validateCreateVisitor } from "../middleware/validation.middleware";
 
 export const visitorRouter = Router();
+visitorRouter.get("/",getAllVisitors);
 
-// GET /visitors
-// TODO: Wire up the getAllVisitors controller
+visitorRouter.post("/",
+    validateCreateVisitor,
+createVisitor
+);
 
-// POST /visitors
-// TODO: Wire up the validateCreateVisitor middleware AND the createVisitor controller
-
-// PUT /visitors/:id/checkin
-// TODO: Wire up the checkInVisitor controller
-
-// PUT /visitors/:id/checkout
-// TODO: Wire up the checkOutVisitor controller
+visitorRouter.put(
+    "/:id/checkin",
+    checkInVisitor
+    
+);
+visitorRouter.put(
+    "/:id/checkout",
+    checkOutVisitor
+);
