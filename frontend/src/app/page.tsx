@@ -30,7 +30,8 @@ export default function DashboardPage() {
     await fetchVisitors()
     }catch(error){
       console.error("Check in failed:",error);
-    }  
+  }
+    
   }
   async function handleCheckOut(id: string) {
     try{
@@ -40,7 +41,7 @@ export default function DashboardPage() {
       console.error("Check out failed:",error);
     }
   }
-
+    
   return (
     <main className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
@@ -52,6 +53,7 @@ export default function DashboardPage() {
        </Button>
        </Link>
        </div>
+       
       
       {visitors.length ===0 ?(
         <p className="text-muted-foreground">
@@ -71,12 +73,3 @@ export default function DashboardPage() {
       </main>
   );
 }
-
-      
-     
-    
-  
-
-
-
-
