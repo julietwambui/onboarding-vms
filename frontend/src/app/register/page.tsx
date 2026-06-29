@@ -1,4 +1,3 @@
-//Visitor Registration Form — Sprint 2
 "use client";
 
 import Link from "next/link";
