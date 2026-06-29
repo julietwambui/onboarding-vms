@@ -27,6 +27,12 @@ export async function create(data: { fullName: string; purpose: string }) {
 }
 
 export async function checkIn(id: string) {
+  const visitor=await prisma.visitor.findUnique({
+    where:{id},
+  });
+  if(!visitor){
+    throw new Error("Visitor not found");
+  }
   return await prisma.visitor.update({
     where:{
       id,
@@ -39,6 +45,12 @@ export async function checkIn(id: string) {
 }
 
 export async function checkOut(id: string) {
+  const visitor=await prisma.visitor.findUnique({
+    where:{id},
+  });
+  if(!visitor){
+    throw new Error("Visitor not found");
+  }
   return await prisma.visitor.update({
     where:{
       id,

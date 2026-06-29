@@ -13,7 +13,7 @@ export async function getAllVisitors(_req: Request, res: Response) {
       res.status(200).json(visitors);
     }catch (error) {
       console.error("Error fetching visitors",error);
-      res.status(500).json({message:"Failed to fatch visitors"});
+      res.status(500).json({message:"Failed to fetch visitors"});
     }
    }
   
@@ -39,7 +39,12 @@ export async function checkInVisitor(req: Request, res: Response) {
     res.status(200).json(updatedVisitor);
   }catch (error) {
     console.error("Error checking in visitor:",error);
-    res.status(404).json({message:"Visitor not found"});
+    if(error instanceof Error && error.message ==="Visitor not found"){
+      return res.status(404).json({
+        message:error.message,
+      });
+    }
+    return res.status(500).json({message:"Failed to check in visitor"});
   }
   }
 
@@ -50,7 +55,12 @@ export async function checkOutVisitor(req: Request, res: Response) {
     res.status(200).json(updatedVisitor);
   }catch (error){
     console.error("Error checking out visitor:",error);
-    res.status(404).json({message:"Visitor not found"});
+    if(error instanceof Error && error.message ==="Visitor not found"){
+      return res.status(404).json({
+        message:error.message,
+      });
+    }
+    return res.status(500).json({message:"Failed to check out visitor"});
   }
   }
   
