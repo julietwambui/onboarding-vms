@@ -1,4 +1,3 @@
-// VisitorTable Component — Sprint 3
 "use client"
 import { Visitor } from "@/types/visitor";
 import{Button} from"@/components/ui/button";
@@ -80,7 +79,9 @@ export default function VisitorTable({
         </Table>     
   );
 }
-    
+          
+      
+      
     
   
 
