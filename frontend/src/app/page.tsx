@@ -1,6 +1,4 @@
-// Reception Dashboard — Sprint 3
 "use client";
-
 import { useState, useEffect } from "react";
 import { Visitor } from "@/types/visitor";
 import { apiClient } from "@/lib/apiClient";
@@ -23,14 +21,15 @@ export default function DashboardPage() {
  useEffect(()=>{
   fetchVisitors();
  }, []);
-
+  
   async function handleCheckIn(id: string) {
     try{
     await apiClient.put(`/visitors/${id}/checkin`);
     await fetchVisitors()
     }catch(error){
       console.error("Check in failed:",error);
-    }  
+  }
+  
   }
   async function handleCheckOut(id: string) {
     try{
@@ -40,7 +39,8 @@ export default function DashboardPage() {
       console.error("Check out failed:",error);
     }
   }
-
+   
+  
   return (
     <main className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
@@ -52,6 +52,7 @@ export default function DashboardPage() {
        </Button>
        </Link>
        </div>
+       
       
       {visitors.length ===0 ?(
         <p className="text-muted-foreground">
@@ -71,8 +72,6 @@ export default function DashboardPage() {
       </main>
   );
 }
-
-      
      
     
   

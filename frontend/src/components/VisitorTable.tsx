@@ -1,4 +1,3 @@
-// VisitorTable Component — Sprint 3
 "use client"
 import { Visitor } from "@/types/visitor";
 import{Button} from"@/components/ui/button";
@@ -45,7 +44,7 @@ export default function VisitorTable({
                     ? "bg-yellow-500 text-white"
                     :visitor.status==="CHECKED_IN"
                     ?"bg-green-600 text-white"
-                    :"bg-grey-600 text-white"
+                    :"bg-gray-600 text-white"
                   }
                   >
                   {visitor.status}
@@ -67,6 +66,12 @@ export default function VisitorTable({
                       Check Out
                     </Button>
                   )}
+
+                  {visitor.status === "CHECKED_OUT" && (
+                    <span className="text-muted-foreground">
+                      Checked Out
+                    </span>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -74,8 +79,6 @@ export default function VisitorTable({
         </Table>     
   );
 }
-    
-      
           
       
       
