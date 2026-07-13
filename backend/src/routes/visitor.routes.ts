@@ -6,9 +6,10 @@ import {
     checkOutVisitor,
 } from "../controllers/visitor.controller";
 import { validateCreateVisitor } from "../middleware/validation.middleware";
+import { authenticate } from "../middleware/auth.middleware";
 
 export const visitorRouter = Router();
-visitorRouter.get("/",getAllVisitors);
+visitorRouter.get("/", getAllVisitors);
 
 visitorRouter.post("/",
     validateCreateVisitor,
@@ -17,10 +18,12 @@ createVisitor
 
 visitorRouter.put(
     "/:id/checkin",
+     authenticate,
     checkInVisitor
     
 );
 visitorRouter.put(
     "/:id/checkout",
+     authenticate,
     checkOutVisitor
 );
