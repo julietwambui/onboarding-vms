@@ -26,7 +26,7 @@ export default function VisitorForm({ onSuccess }: VisitorFormProps) {
 
   useEffect(() => {
     if (success) {
-      router.push("/");
+      router.push("/dashboard");
     }
   }, [success, router]);
 

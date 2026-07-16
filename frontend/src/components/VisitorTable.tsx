@@ -15,12 +15,14 @@ interface VisitorTableProps {
   visitors: Visitor[];
   onCheckIn: (id: string) => void;
   onCheckOut: (id: string) => void;
+  isAuthenticated:boolean;
 }
 
 export default function VisitorTable({
   visitors,
   onCheckIn,
   onCheckOut,
+  isAuthenticated,
 }: VisitorTableProps) {
   return (
     <Table>
@@ -53,7 +55,8 @@ export default function VisitorTable({
 
                 <TableCell>
                   {visitor.status==="PENDING" && (
-                    <Button onClick={() =>onCheckIn(visitor.id)}>
+                    <Button disabled={!isAuthenticated}
+                    onClick={() =>onCheckIn(visitor.id)}>
                       Check In
                     </Button>
                   )}
@@ -61,6 +64,7 @@ export default function VisitorTable({
                   {visitor.status === "CHECKED_IN" && (
                     <Button
                     variant="destructive"
+                    disabled={!isAuthenticated}
                     onClick={()=>onCheckOut(visitor.id)}
                     >
                       Check Out

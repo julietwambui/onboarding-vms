@@ -1,5 +1,14 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+}
+
 export const apiClient = {
   get:async (path:string)=>{
     const res=await fetch(`${BASE_URL}${path}`);
@@ -31,11 +40,10 @@ export const apiClient = {
  put:async (path:string,body?:unknown)=>{
   const res=await fetch(`${BASE_URL}${path}`,{
   method:"PUT",
-  headers:{
-    "Content-Type":"application/json",
-  },
+  headers: getAuthHeaders(),
  body: body !==undefined ? JSON.stringify(body) : undefined,
  });
+ 
  if(!res.ok){
   const text=await res.text();
   console.log("PUT ERROR:", res.status, text);

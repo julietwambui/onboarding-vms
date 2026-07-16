@@ -1,81 +1,32 @@
-"use client";
-import { useState, useEffect } from "react";
-import { Visitor } from "@/types/visitor";
-import { apiClient } from "@/lib/apiClient";
 import Link from "next/link";
-import {Button} from "@/components/ui/button";
-import VisitorTable from"@/components/VisitorTable";
+import { Button } from "@/components/ui/button";
 
-export default function DashboardPage() {
-  const [visitors, setVisitors] = useState<Visitor[]>([]);
-  
-
-  async function fetchVisitors(){
-    try{
-    const response=await apiClient.get("/visitors");
-    setVisitors(response.data ?? response);
-  }catch(error){
-    console.error("Failed to fetch visitors:",error);
-  }
-}
- useEffect(()=>{
-  fetchVisitors();
- }, []);
-  
-  async function handleCheckIn(id: string) {
-    try{
-    await apiClient.put(`/visitors/${id}/checkin`);
-    await fetchVisitors()
-    }catch(error){
-      console.error("Check in failed:",error);
-  }
-  
-  }
-  async function handleCheckOut(id: string) {
-    try{
-    await apiClient.put(`/visitors/${id}/checkout`);
-    await fetchVisitors();
-    }catch(error){
-      console.error("Check out failed:",error);
-    }
-  }
-   
-  
+export default function HomePage() {
   return (
-    <main className="container mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Reception Dashboard</h1>
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-blue-500 p-6">
+      <div className="bg-white rounded-2xl shadow-xl p-10 w-full max-w-md text-center">
+        <h1 className="text-4xl font-bold text-slate-800 mb-4">
+          Visitor Management System
+        </h1>
 
-        <Link href="/register">
-       <Button> 
-        Register Visitor
-       </Button>
-       </Link>
-       </div>
-       
-      
-      {visitors.length ===0 ?(
-        <p className="text-muted-foreground">
-          No visitors yet.{""}
-          <Link href="/register" className="text-blue-600 underline">
-          Register the first visitor
-          </Link>
+        <p className="text-slate-600 mb-8">
+          Welcome! Please choose how you would like to continue.
         </p>
-      ):(
 
-        <VisitorTable
-        visitors={visitors}
-        onCheckIn={handleCheckIn}
-        onCheckOut={handleCheckOut}
-        />
-      )}
-      </main>
+        <div className="space-y-4">
+          <Link href="/register">
+            <Button className="w-full">
+              Register as Visitor
+            </Button>
+          </Link>
+
+          <Link href="/login">
+            <Button variant="outline" className="w-full">
+              Admin Login
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 }
-     
-    
-  
-
-
-
-
