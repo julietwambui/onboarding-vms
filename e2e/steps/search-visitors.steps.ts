@@ -16,7 +16,7 @@ Given("I am on the dashboard page", async () => {
 });
 
 When("I type {string} in the search box", async (searchTerm: string) => {
-  await page.fill('input[placeholder="Search visitors..."]', searchTerm);
+  await page.fill('input[placeholder="Search by name or purpose..."]', searchTerm);
   await page.waitForTimeout(500);
 });
 

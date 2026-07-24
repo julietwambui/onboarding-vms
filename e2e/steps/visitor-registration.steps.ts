@@ -9,7 +9,7 @@ Given("I am on the landing page", async () => {
 });
 
 When("I choose Visitor", async () => {
-  await page.getByRole("button", { name: "Register as Visitor" }).click();
+  await page.getByRole("button", { name: "I'm a Visitor" }).click();
   await page.waitForLoadState("networkidle");
 });
 
