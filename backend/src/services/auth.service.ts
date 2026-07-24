@@ -58,7 +58,7 @@ export async function login(email: string, password: string) {
     {
       id: user.id,
       email: user.email,
-      role: user.role,
+      role: (user as any).role,
     },
     process.env.JWT_SECRET as string,
     {
@@ -72,7 +72,7 @@ export async function login(email: string, password: string) {
       id: user.id,
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: (user as any).role,
     },
   };
 }

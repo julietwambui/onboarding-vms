@@ -7,9 +7,10 @@ import {
 }from "../services/visitor.service";
 
 
-export async function getAllVisitors(_req: Request, res: Response) {
+export async function getAllVisitors(req: Request, res: Response) {
     try{
-      const visitors=await findAll();
+      const search =req.query.search as string | undefined;
+      const visitors=await findAll(search);
       res.status(200).json(visitors);
     }catch (error) {
       console.error("Error fetching visitors",error);

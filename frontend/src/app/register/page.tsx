@@ -9,21 +9,15 @@ export default function RegisterPage() {
 
   function handleSuccess() {
     console.log("Visitor registered successfully");
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (
     <main className="min-h-screen flex items-center
     justify-center p-4">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-7xl">
       <VisitorForm onSuccess={handleSuccess} />
       </div>
-
-      <Link
-       href="/"
-       className="mt-4 text-sm text-black-600 hover:underline"
-       >← Back to Dashboard
-        </Link>
     </main>
   );
 }

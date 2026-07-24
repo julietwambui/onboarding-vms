@@ -1,104 +1,269 @@
 "use client";
+
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  Users,
+  Clock3,
+  BadgeCheck,
+  LogOut,
+  Search,
+} from "lucide-react";
+
 import { Visitor } from "@/types/visitor";
 import { apiClient } from "@/lib/apiClient";
-import Link from "next/link";
-import {Button} from "@/components/ui/button";
-import VisitorTable from"@/components/VisitorTable";
+
+import VisitorTable from "@/components/VisitorTable";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function DashboardPage() {
   const [visitors, setVisitors] = useState<Visitor[]>([]);
-   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  
-
-  async function fetchVisitors(){
-    try{
-    const response=await apiClient.get("/visitors");
-    setVisitors(response.data ?? response);
-  }catch(error){
-    console.error("Failed to fetch visitors:",error);
-  }
-}
- useEffect(()=>{
-  fetchVisitors();
-  const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
- }, []);
-  
-  async function handleCheckIn(id: string) {
-    try{
-    await apiClient.put(`/visitors/${id}/checkin`);
-    await fetchVisitors()
-    }catch(error){
-      console.error("Check in failed:",error);
-  }
-  
-  }
-  async function handleCheckOut(id: string) {
-    try{
-    await apiClient.put(`/visitors/${id}/checkout`);
-    await fetchVisitors();
-    }catch(error){
-      console.error("Check out failed:",error);
+  async function fetchVisitors() {
+    try {
+      const response = await apiClient.get("/visitors");
+      setVisitors(response.data ?? response);
+    } catch (error) {
+      console.error(error);
     }
   }
 
+  useEffect(() => {
+    fetchVisitors();
+
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, []);
+
+  async function handleCheckIn(id: string) {
+    await apiClient.put(`/visitors/${id}/checkin`);
+    fetchVisitors();
+  }
+
+  async function handleCheckOut(id: string) {
+    await apiClient.put(`/visitors/${id}/checkout`);
+    fetchVisitors();
+  }
+
   function handleLogout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsAuthenticated(false);
+  }
 
-  setIsAuthenticated(false);
-}
-   
-  
+  const filteredVisitors = visitors.filter(
+    (visitor) =>
+      visitor.fullName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      visitor.purpose
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+  );
+
+  const pending = visitors.filter(
+    (v) => v.status === "PENDING"
+  ).length;
+
+  const checkedIn = visitors.filter(
+    (v) => v.status === "CHECKED_IN"
+  ).length;
+
+  const checkedOut = visitors.filter(
+    (v) => v.status === "CHECKED_OUT"
+  ).length;
+
   return (
-    <main className="container mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Reception Dashboard</h1>
+    <main className="min-h-screen bg-gray-100 p-8">
 
-        <div className="flex gap-2">
-        <Link href="/register">
-       <Button> 
-        Register Visitor
-       </Button>
-       </Link>
+      {/* Header */}
 
-       {isAuthenticated && (
-        <Button
-        variant="outline"
-        onClick={handleLogout}
-        >
-          Logout
-        </Button>
-       )}
-       </div>
-       </div>
-       
-      
-      {visitors.length ===0 ?(
-        <p className="text-muted-foreground">
-          No visitors yet.{" "}
-          <Link href="/register" className="text-blue-600 underline">
-          Register the first visitor
+      <div className="flex items-center justify-between mb-10">
+
+        <div>
+
+          <h1 className="text-4xl font-bold text-slate-800">
+            Reception Dashboard
+          </h1>
+
+          <p className="text-slate-500 mt-2">
+            Welcome back. Manage today's visitors efficiently.
+          </p>
+
+        </div>
+
+        <div className="flex gap-3">
+
+          <Link href="/register">
+
+            <Button className="rounded-full bg-violet-600 hover:bg-violet-700 px-6">
+              Register Visitor
+            </Button>
+
           </Link>
-        </p>
-      ):(
 
-        <VisitorTable
-        visitors={visitors}
-        onCheckIn={handleCheckIn}
-        onCheckOut={handleCheckOut}
-        isAuthenticated={isAuthenticated}
+          {isAuthenticated && (
+            <Button
+              variant="outline"
+              className="rounded-full px-6"
+              onClick={handleLogout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </Button>
+          )}
+
+        </div>
+
+      </div>
+
+      {/* Statistics */}
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+
+        <Card className="rounded-3xl border-0 shadow-md bg-violet-100">
+          <CardContent className="p-6 flex items-center justify-between">
+            <div>
+              <p className="text-violet-700 text-sm font -medium">
+                Total Visitors
+              </p>
+
+              <h2 className="text-4xl font-bold text-violet-900 mt-2">
+                {visitors.length}
+              </h2>
+            </div>
+
+            <div className="w-14 h-14 rounded-2xl bg-violet-200 flex items-center justify-cente">
+            <Users className="text-violet-700 w-7 h-7" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-3xl border-0 shadow-md bg-yellow-50">
+          <CardContent className="p-6 flex items-center justify-between">
+            <div>
+              <p className="text-yellow-700 text-sm font-medium">
+                Pending
+              </p>
+
+              <h2 className="text-4xl font-bold text-yellow-900 mt-2">
+                {pending}
+              </h2>
+            </div>
+           <div className="w-14 h-14 rounded-2xl bg-yellow-200 flex items-center justify-center">
+            <Clock3 className="text-yellow-500 w-10 h-10" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-3xl border-0 shadow-md bg-green-50">
+          <CardContent className="p-6 flex items-center justify-between">
+            <div>
+              <p className="text-green-700 text-sm font-medium">
+                Checked In
+              </p>
+
+              <h2 className="text-4xl font-bold text-green-900 mt-2">
+                {checkedIn}
+              </h2>
+            </div>
+            <div className="w-14 h-14 rounded-2xl bg-green-200 flex items-center justify-center">
+              
+            <BadgeCheck className="text-green-700 w-7 h-7" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-3xl border-0 shadow-md bg-slate-100">
+          <CardContent className="p-6 flex items-center justify-between">
+
+            <div>
+              <p className="text-slate-700 text-sm">
+                Checked Out
+              </p>
+
+              <h2 className="text-4xl font-bold text-slate-900 mt-2">
+                {checkedOut}
+              </h2>
+            </div>
+            <div className="w-14 h-14 rounded-2xl bg-slate-300 flex items-center justify-center">
+            <LogOut className="text-gray-600 w-10 h-10" />
+            </div>
+          </CardContent>
+        </Card>
+
+      </div>
+
+      {/* Search */}
+
+      <div className="relative max-w-md mb-8">
+
+        <Search className="absolute left-4 top-4 text-gray-400 h-5 w-5" />
+
+        <Input
+          placeholder="Search by name or purpose..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-12 h-14 rounded-full bg-white shadow-sm"
         />
-      )}
-      </main>
+
+      </div>
+
+      {/* Table */}
+
+      <Card className="rounded-3xl border-0 shadow-lg">
+
+        <CardContent className="p-6">
+
+          <h2 className="text-xl font-bold mb-6">
+            Visitor List
+          </h2>
+
+          {visitors.length === 0 ? (
+            <div className="text-center py-20">
+
+              <h3 className="text-2xl font-semibold mb-3">
+                No Visitors Yet
+              </h3>
+
+              <p className="text-gray-500 mb-6">
+                Register your first visitor to begin.
+              </p>
+
+              <Link href="/register">
+                <Button className="rounded-full px-8 bg-violet-600 hover:bg-violet-700">
+                  Register Visitor
+                </Button>
+              </Link>
+
+            </div>
+          ) : filteredVisitors.length === 0 ? (
+
+            <div className="text-center py-16">
+
+              <h3 className="text-xl font-semibold">
+                No Visitors Found
+              </h3>
+
+            </div>
+
+          ) : (
+
+            <VisitorTable
+              visitors={filteredVisitors}
+              onCheckIn={handleCheckIn}
+              onCheckOut={handleCheckOut}
+              isAuthenticated={isAuthenticated}
+            />
+
+          )}
+        </CardContent>
+      </Card>
+    </main>
   );
 }
-     
-    
-  
-
-
-
-

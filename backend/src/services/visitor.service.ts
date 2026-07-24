@@ -8,9 +8,15 @@ const pool=new Pool({
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({adapter});
 
-export async function findAll() {
+export async function findAll(search?: string) {
   return await prisma.visitor.findMany({
-    orderBy:{
+    where: search ? {
+      fullName: {
+        contains: search,
+        mode: "insensitive",
+      },
+    } : undefined,
+    orderBy: {
       createdAt:"desc",
     },
   });
