@@ -11,7 +11,7 @@ Feature: Search Visitors
   Scenario: Search returns no results for unknown name
     Given I am on the dashboard page
     When I type "zzznomatch" in the search box
-    Then I should see "No visitors found."
+    Then I should see "No Visitors Found"
 
   Scenario: Search is case insensitive
     Given I am on the dashboard page

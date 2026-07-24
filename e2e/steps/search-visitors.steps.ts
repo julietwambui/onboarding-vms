@@ -38,6 +38,8 @@ console.log("Visitors found:", visitorNames);
 Then("I should see {string}", async (message: string) => {
  await page.waitForTimeout(500);
 
- const noResults = page.locator(`text=${message}`);
- await assert.ok(await noResults.isVisible());
+ const noResults = page.getByText(
+  new RegExp(message,"i")
+ );
+  assert.ok(await noResults.isVisible());
 });
