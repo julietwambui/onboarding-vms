@@ -171,7 +171,7 @@ jobs:
 
       - name: Start Frontend
         working-directory: frontend
-        run: npm run dev &
+        run: npm run start &
         env:
           NEXT_PUBLIC_API_URL: http://localhost:4000
 
