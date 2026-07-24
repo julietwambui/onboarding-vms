@@ -172,6 +172,12 @@ jobs:
       - name: Wait for Backend and Frontend
         run: npx wait-on http://localhost:3000 http://localhost:4000/health --timeout 60000
 
+      - name: Seed Test Data 
+        working-directory: backend
+        run: npx ts-node prisma/seedVisitors.ts
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vms_test
+
       - name: Run BDD Tests
         working-directory: e2e
         run: npm test

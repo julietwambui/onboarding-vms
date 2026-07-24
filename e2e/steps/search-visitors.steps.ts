@@ -17,7 +17,7 @@ Given("I am on the dashboard page", async () => {
 
 When("I type {string} in the search box", async (searchTerm: string) => {
   await page.fill('input[placeholder="Search by name or purpose..."]', searchTerm);
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(2000);
 });
 
 Then("I should only see visitors whose name contains {string}", async (name: string) => {
