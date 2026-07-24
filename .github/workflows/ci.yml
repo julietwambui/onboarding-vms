@@ -174,7 +174,9 @@ jobs:
 
       - name: Seed Test Data 
         working-directory: backend
-        run: npx ts-node prisma/seedVisitors.ts
+        run: |
+         npx ts-node prisma/seed.ts
+         npx ts-node prisma/seedVisitors.ts
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vms_test
 
