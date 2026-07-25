@@ -187,6 +187,12 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vms_test
 
+      - name: Verify Seed Data
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -d vms_test -c "SELECT email, role FROM \"User\";"
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vms_test
+
       - name: Test Backend Login API
         run: |
           curl -X POST http://localhost:4000/auth/login \
