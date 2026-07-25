@@ -45,12 +45,14 @@ export default function LoginForm() {
         data
       )) as LoginResponse;
 
+    if (typeof window !== "undefined") {
       localStorage.setItem("token", response.token);
 
       localStorage.setItem(
         "user",
         JSON.stringify(response.user)
       );
+    }
 
       setErrorMessage("");
 

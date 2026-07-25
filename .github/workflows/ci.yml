@@ -161,6 +161,7 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vms_test
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          FRONTEND_URL: http://localhost:3000
           PORT: 4000
 
       - name: Build Frontend
@@ -185,6 +186,13 @@ jobs:
          npx ts-node prisma/seedVisitors.ts
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vms_test
+
+      - name: Test Backend Login API
+        run: |
+          curl -X POST http://localhost:4000/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{"email":"admin@vms.com","password":"admin123"}' \
+            -v
 
       - name: Run BDD Tests
         working-directory: e2e
