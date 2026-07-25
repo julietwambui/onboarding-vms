@@ -189,7 +189,7 @@ jobs:
 
       - name: Verify Seed Data
         run: |
-          PGPASSWORD=postgres psql -h localhost -U postgres -d vms_test -c "SELECT email, role FROM \"User\";"
+          PGPASSWORD=postgres psql -h localhost -U postgres -d vms_test -c "\d \"User\";"
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/vms_test
 
