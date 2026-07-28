@@ -28,5 +28,5 @@ test("Admin can check in a PENDING visitor", async ({ page }) => {
     .allTextContents();
 
   console.log("Statuses after check in:", statusTexts);
-  expect(statusTexts.some((s) => s.includes("CHECKED_IN"))).toBe(true);
+  expect(statusTexts.some((s) => s.includes("CHECKED_IN") || s.includes("CHECKED_IN"))).toBe(true);
 });

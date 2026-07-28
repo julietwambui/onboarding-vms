@@ -28,5 +28,5 @@ test("Admin can check out a CHECKED_IN visitor", async ({ page }) => {
     .allTextContents();
 
   console.log("Statuses after check out:", statusTexts);
-  expect(statusTexts.some((s) => s.includes("CHECKED_OUT"))).toBe(true);
+  expect(statusTexts.some((s) => s.includes("CHECKED_OUT") || s.includes ("CHECKED_OUT"))).toBe(true);
 });
