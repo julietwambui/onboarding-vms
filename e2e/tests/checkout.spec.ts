@@ -23,10 +23,10 @@ test("Admin can check out a CHECKED_IN visitor", async ({ page }) => {
    
   await page.waitForTimeout(5000);
   // Wait for table to refresh
-  await expect(
-    page
+ const statusTexts = await page
     .locator("[data-testid='visitor-status']")
-    .filter({ hasText: "CHECKED_OUT"})
-    .first()
-  ).toBeVisible({timeout:15000});
+    .allTextContents();
+
+  console.log("Statuses after check out:", statusTexts);
+  expect(statusTexts.some((s) => s.includes("CHECKED_OUT"))).toBe(true);
 });

@@ -23,10 +23,10 @@ test("Admin can check in a PENDING visitor", async ({ page }) => {
 
   await page.waitForTimeout(5000);
   // Wait for table to refresh
-  await expect(
-    page
+  const statusTexts = await page
     .locator("[data-testid='visitor-status']")
-    .filter({ hasText: "CHECKED_IN"})
-    .first()
-  ).toBeVisible({timeout: 15000});
-    });
+    .allTextContents();
+
+  console.log("Statuses after check in:", statusTexts);
+  expect(statusTexts.some((s) => s.includes("CHECKED_IN"))).toBe(true);
+});
