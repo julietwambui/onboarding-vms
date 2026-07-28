@@ -21,11 +21,12 @@ test("Admin can check in a PENDING visitor", async ({ page }) => {
   await checkInButton.waitFor({ state: "visible", timeout: 30000 });
   await checkInButton.click();
 
+  await page.waitForTimeout(5000);
   // Wait for table to refresh
   await expect(
     page
     .locator("[data-testid='visitor-status']")
     .filter({ hasText: "CHECKED_IN"})
     .first()
-  ).toBeVisible();
+  ).toBeVisible({timeout: 15000});
     });

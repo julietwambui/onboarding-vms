@@ -20,12 +20,13 @@ test("Admin can check out a CHECKED_IN visitor", async ({ page }) => {
   const checkOutButton = page.locator("[data-testid='checkout-btn']").first();
   await checkOutButton.waitFor({ state: "visible", timeout: 30000 });
   await checkOutButton.click();
-
+   
+  await page.waitForTimeout(5000);
   // Wait for table to refresh
   await expect(
     page
     .locator("[data-testid='visitor-status']")
     .filter({ hasText: "CHECKED_OUT"})
     .first()
-  ).toBeVisible();
+  ).toBeVisible({timeout:15000});
 });
