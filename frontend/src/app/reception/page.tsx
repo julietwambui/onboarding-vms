@@ -22,8 +22,8 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function DashboardPage() {
   const [visitors, setVisitors] = useState<Visitor[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  
+ 
   async function fetchVisitors() {
     try {
       const response = await apiClient.get("/visitors");
@@ -35,9 +35,6 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchVisitors();
-
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
   }, []);
 
   async function handleCheckIn(id: string) {
@@ -49,12 +46,16 @@ export default function DashboardPage() {
     await apiClient.put(`/visitors/${id}/checkout`);
     fetchVisitors();
   }
+  
+  async function handleEdit(id: string, data: { fullName: string; purpose: string }) {
+  await apiClient.put(`/visitors/${id}`, data);
+  fetchVisitors();
+}
 
-  function handleLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setIsAuthenticated(false);
-  }
+async function handleDelete(id: string) {
+  await apiClient.delete(`/visitors/${id}`);
+  fetchVisitors();
+}
 
   const filteredVisitors = visitors.filter(
     (visitor) =>
@@ -81,8 +82,6 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen bg-gray-100 p-8">
 
-      {/* Header */}
-
       <div className="flex items-center justify-between mb-10">
 
         <div>
@@ -104,25 +103,9 @@ export default function DashboardPage() {
             <Button className="rounded-full bg-violet-600 hover:bg-violet-700 px-6">
               Register Visitor
             </Button>
-
           </Link>
-
-          {isAuthenticated && (
-            <Button
-              variant="outline"
-              className="rounded-full px-6"
-              onClick={handleLogout}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
-          )}
-
         </div>
-
       </div>
-
-      {/* Statistics */}
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
 
@@ -199,8 +182,6 @@ export default function DashboardPage() {
 
       </div>
 
-      {/* Search */}
-
       <div className="relative max-w-md mb-8">
 
         <Search className="absolute left-4 top-4 text-gray-400 h-5 w-5" />
@@ -213,8 +194,6 @@ export default function DashboardPage() {
         />
 
       </div>
-
-      {/* Table */}
 
       <Card className="rounded-3xl border-0 shadow-lg">
 
@@ -249,18 +228,15 @@ export default function DashboardPage() {
               <h3 className="text-xl font-semibold">
                 No Visitors Found
               </h3>
-
             </div>
-
           ) : (
-
             <VisitorTable
               visitors={filteredVisitors}
               onCheckIn={handleCheckIn}
               onCheckOut={handleCheckOut}
-              isAuthenticated={isAuthenticated}
+               onDelete={handleDelete}
+              onEdit={handleEdit}
             />
-
           )}
         </CardContent>
       </Card>

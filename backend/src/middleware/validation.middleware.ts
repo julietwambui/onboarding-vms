@@ -5,10 +5,36 @@ export function validateCreateVisitor(
   res: Response,
   next: NextFunction
 ) {
-  const { fullName, purpose } = req.body;
+  const { 
+    fullName,
+    email,
+    phoneNumber,
+    purpose,
+   } = req.body;
 
-  if (!fullName || typeof fullName !=="string" || fullName.trim() ==="") {
+  if (
+    !fullName || typeof fullName !=="string" || fullName.trim() ==="") {
     return res.status(400).json({ error: "fullName is required and must be a non-empty string"});
+  }
+
+   if (
+    !email ||
+    typeof email !== "string" ||
+    email.trim() === ""
+  ) {
+    return res.status(400).json({
+      error: "email is required",
+    });
+  }
+
+  if (
+    !phoneNumber ||
+    typeof phoneNumber !== "string" ||
+    phoneNumber.trim() === ""
+  ) {
+    return res.status(400).json({
+      error: "phoneNumber is required",
+    });
   }
 
   if (!purpose || typeof purpose !== "string" || purpose.trim() === "") {

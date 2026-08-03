@@ -51,4 +51,19 @@ export const apiClient = {
  }
  return res.json();
 },
-};
+
+delete: async (path: string) => {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.log("DELETE ERROR:", res.status, text);
+    throw new Error(`DELETE ${path} failed`);
+  }
+
+  return res.json();
+},
+}

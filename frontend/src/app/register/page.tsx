@@ -9,7 +9,7 @@ export default function RegisterPage() {
 
   function handleSuccess() {
     console.log("Visitor registered successfully");
-    router.push("/dashboard");
+    router.push("/reception");
   }
 
   return (

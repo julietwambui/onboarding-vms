@@ -11,11 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-
-import { User, ClipboardList } from "lucide-react";
+import { User, Mail, Phone, Building2, ClipboardList } from "lucide-react";
 
 interface VisitorFormProps {
   onSuccess: () => void;
+}
+interface Department {
+  id: string;
+  name: string;
 }
 
 export default function VisitorForm({
@@ -25,7 +28,7 @@ export default function VisitorForm({
 
   const [success, setSuccess] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+   const [departments, setDepartments] = useState<Department[]>([]);
   const {
     register,
     handleSubmit,
@@ -34,8 +37,20 @@ export default function VisitorForm({
   } = useForm<CreateVisitorPayload>();
 
   useEffect(() => {
+  async function fetchDepartments() {
+    try {
+      const response = await apiClient.get("/departments");
+      setDepartments(response);
+    } catch (error) {
+      console.error("Failed to load departments:", error);
+    }
+  }
+  fetchDepartments();
+}, []);
+
+  useEffect(() => {
     if (success) {
-      router.push("/dashboard");
+      router.push("/reception");
     }
   }, [success, router]);
 
@@ -71,11 +86,7 @@ export default function VisitorForm({
 
         <div className="grid md:grid-cols-2">
 
-          {/* LEFT PANEL */}
-
           <div className="relative overflow-hidden bg-white text-gray-900 p-14 flex flex-col justify-center">
-
-            {/* Decorative Shapes */}
 
             <div className="absolute -top-28 right-0 w-72 h-72 bg-violet-300 rounded-bl-full"></div>
 
@@ -109,14 +120,9 @@ export default function VisitorForm({
                 <p>✔ Quick Check-In</p>
 
                 <p>✔ Real-Time Visitor Tracking</p>
-
               </div>
-
             </div>
-
           </div>
-
-          {/* RIGHT PANEL */}
 
           <div className="p-16 flex flex-col justify-center">
 
@@ -132,9 +138,6 @@ export default function VisitorForm({
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-6"
             >
-
-              {/* Full Name */}
-
               <div>
 
                 <Label htmlFor="fullName" className="mb-2 block">
@@ -151,23 +154,103 @@ export default function VisitorForm({
                     className="h-14 rounded-full pl-12"
                     {...register("fullName", {
                       required: "Full name is required",
+
+                      validate: (value)=> {
+                        const names = value
+                        .trim()
+                        .split(/\s+/);
+                        return(
+                          names.length >= 2 ||
+                          "Please enter at least two names"
+                        );
+                      },
                     })}
                   />
-
                 </div>
-
                 {errors.fullName && (
                   <p className="text-red-500 text-sm mt-2">
                     {errors.fullName.message}
                   </p>
                 )}
-
               </div>
 
-              {/* Purpose */}
+              <div className="grid md:grid-cols-2 gap-6">
+
+  <div>
+    <Label htmlFor="email" className="mb-2 block">
+      Email Address
+    </Label>
+
+    <div className="relative">
+      <Mail className="absolute left-4 top-4 h-5 w-5 text-gray-400"/>
+   
+    <Input
+      id="email"
+      type="email"
+      placeholder="john@gmail.com"
+      className="h-14 rounded-full pl-12"
+      {...register("email", {
+        required: "Email is required",
+      })}
+    />
+  </div>
+  </div>
+
+  <div>
+    <Label htmlFor="phoneNumber" className="mb-2 block">
+      Phone Number
+    </Label>
+
+<div className="relative">
+  <Phone className="absolute left-4 top-4 h-5 w-5 text-gray-400" />
+
+    <Input
+      id="phoneNumber"
+      placeholder="0712345678"
+      className="h-14 rounded-full pl-12"
+      {...register("phoneNumber", {
+        required: "Phone number is required",
+      })}
+    />
+    </div>
+  </div>
+</div>
+
+<div>
+  <Label htmlFor="departmentId" className="mb-2 block">
+    Department
+  </Label>
+
+<div className="relative">
+  <Building2 className="absolute left-4 top-4 h-5 w-5 text-gray-400 z-10" />
+
+  <select
+    id="departmentId"
+    className="w-full h-14 rounded-full border border-gray-300 bg-white pl-12 pr-5"
+    {...register("departmentId", {
+      required: "Department is required",
+    })}
+  >
+    <option value="">Select Department</option>
+
+    {departments.map((department) => (
+      <option
+        key={department.id}
+        value={department.id}
+      >
+        {department.name}
+      </option>
+    ))}
+  </select>
+   {errors.departmentId && (
+    <p className="text-red-500 text-sm mt-2">
+      {errors.departmentId.message}
+    </p>
+  )}
+</div>
+</div>
 
               <div>
-
                 <Label htmlFor="purpose" className="mb-2 block">
                   Purpose of Visit
                 </Label>
@@ -206,7 +289,6 @@ export default function VisitorForm({
                   {errorMessage}
                 </p>
               )}
-
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -218,7 +300,7 @@ export default function VisitorForm({
               </Button>
               <div className="mt-6 text-center">
   <Link
-    href="/">
+    href="/reception">
       <Button
       variant="outline"
     className="mt-6 w-full rounded-full border-violet-300 text-violet-700 hover:bg-violet-50 hover:border-violet-500"

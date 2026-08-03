@@ -56,7 +56,7 @@ export default function LoginForm() {
 
       setErrorMessage("");
 
-      router.push("/dashboard");
+      router.push("/administrator");
     } catch (error) {
       console.error(error);
 

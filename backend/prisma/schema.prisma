@@ -19,12 +19,29 @@ model User {
   
 }
 
+model Department {
+  id        String   @id @default(uuid())
+  name       String    @unique
+  createdAt  DateTime  @default(now())
+
+  visitors   Visitor[]
+}
 model Visitor {
   id        String   @id @default(uuid())
+
   fullName  String
   purpose   String
+
+   email         String?
+  phoneNumber   String?
+
+  departmentId  String?
+  department    Department?  @relation(fields: [departmentId], references: [id])
+
   status    String   @default("PENDING") // PENDING, CHECKED_IN, CHECKED_OUT
+
   timeIn    DateTime?
   timeOut   DateTime?
+
   createdAt DateTime @default(now())
 }
