@@ -334,7 +334,7 @@ export async function getPurposeStats() {
 
 export async function updateVisitor(
   id: string,
-  data: { fullName: string; purpose: string }
+  data: { fullName: string; purpose: string; email: string; phoneNumber:string}
 ) {
   const visitor = await prisma.visitor.findUnique({ where: { id } });
   if (!visitor) throw new Error("Visitor not found");
@@ -344,6 +344,8 @@ export async function updateVisitor(
     data: {
       fullName: data.fullName,
       purpose: data.purpose,
+      email: data.email,
+      phoneNumber:data.phoneNumber,
     },
   });
 }

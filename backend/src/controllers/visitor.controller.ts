@@ -166,8 +166,8 @@ export async function getPurposeAnalyticsController(
 export async function updateVisitor(req: Request, res: Response) {
   try {
     const id = req.params.id as string;
-    const { fullName, purpose } = req.body;
-    const updated = await updateVisitorService(id, { fullName, purpose });
+    const { fullName, purpose, email, phoneNumber } = req.body;
+    const updated = await updateVisitorService(id, { fullName, purpose, email, phoneNumber});
     res.status(200).json(updated);
   } catch (error) {
     console.error("Error updating visitor:", error);
