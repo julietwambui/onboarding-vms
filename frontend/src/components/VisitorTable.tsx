@@ -20,7 +20,7 @@ interface VisitorTableProps {
   onCheckIn: (id: string) => void;
   onCheckOut: (id: string) => void;
   onDelete: (id: string) => void;
-  onEdit: (id: string, data: { fullName: string; purpose: string }) => void;
+  onEdit: (id: string, data: { fullName: string; purpose: string; email:string; phoneNumber:string }) => void;
 }
 
 export default function VisitorTable({
@@ -33,22 +33,30 @@ export default function VisitorTable({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editFullName, setEditFullName] = useState("");
   const [editPurpose, setEditPurpose] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editPhoneNumber, setEditPhoneNumber] = useState("");
 
   function startEditing(visitor: Visitor) {
     setEditingId(visitor.id);
     setEditFullName(visitor.fullName);
     setEditPurpose(visitor.purpose);
+    setEditEmail(visitor.email);
+    setEditPhoneNumber(visitor.phoneNumber);
   }
 
   function cancelEditing() {
     setEditingId(null);
     setEditFullName("");
     setEditPurpose("");
+    setEditEmail("");
+  setEditPhoneNumber("");
   }
 
   function handleSaveEdit(id: string) {
-    if (!editFullName.trim() || !editPurpose.trim()) return;
-    onEdit(id, { fullName: editFullName.trim(), purpose: editPurpose.trim() });
+    if (!editFullName.trim() || !editPurpose.trim() || !editEmail.trim() || !editPhoneNumber.trim()) return;
+    onEdit(id, { fullName: editFullName.trim(), purpose: editPurpose.trim(), email: editEmail.trim(),
+    phoneNumber: editPhoneNumber.trim(),
+     });
     cancelEditing();
   }
 
@@ -89,8 +97,20 @@ export default function VisitorTable({
                     autoFocus
                   />
                 </TableCell>
-                <TableCell>{visitor.email}</TableCell>
-                <TableCell>{visitor.phoneNumber}</TableCell>
+                <TableCell>
+                  <Input
+                  value={editEmail}
+                  onChange={(e) => setEditEmail(e.target.value)}
+                  className="rounded-full h-8 w-40"
+                  />
+                  </TableCell>
+                <TableCell>
+                  <Input
+                  value={editPhoneNumber}
+                  onChange={(e) => setEditPhoneNumber(e.target.value)}
+                  className="rounded-full h-8 w-32"
+                  />
+                </TableCell>
                 <TableCell>{visitor.department?.name ?? "N/A"}</TableCell>
                 <TableCell>
                   <Input

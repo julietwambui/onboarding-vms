@@ -47,7 +47,9 @@ export default function DashboardPage() {
     fetchVisitors();
   }
   
-  async function handleEdit(id: string, data: { fullName: string; purpose: string }) {
+  async function handleEdit(id: string, data: { fullName: string; purpose: string; email:string;
+    phoneNumber: string
+   }) {
   await apiClient.put(`/visitors/${id}`, data);
   fetchVisitors();
 }
