@@ -13,7 +13,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { LogIn, LogOut, Pencil, Trash2, Check, X } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { LogIn, LogOut, Pencil, Trash2, Check, X, User, AlertTriangle } from "lucide-react";
 
 interface VisitorTableProps {
   visitors: Visitor[];
@@ -35,6 +45,7 @@ export default function VisitorTable({
   const [editPurpose, setEditPurpose] = useState("");
   const [editEmail, setEditEmail] = useState("");
   const [editPhoneNumber, setEditPhoneNumber] = useState("");
+  const [visitorToDelete, setVisitorToDelete] = useState<{ id: string; name: string } | null>(null);
 
   function startEditing(visitor: Visitor) {
     setEditingId(visitor.id);
@@ -60,11 +71,16 @@ export default function VisitorTable({
     cancelEditing();
   }
 
-  function handleDelete(id: string) {
-    if (!confirm("Are you sure you want to delete this visitor?")) return;
-    onDelete(id);
+  function handleDelete(id: string, name: string) {
+    setVisitorToDelete({id, name});
   }
 
+  function confirmDelete() {
+  if (visitorToDelete) {
+    onDelete(visitorToDelete.id);
+    setVisitorToDelete(null);
+  }
+}
   return (
     <Table>
       <TableHeader>
@@ -153,9 +169,12 @@ export default function VisitorTable({
               // View mode
               <>
                 <TableCell data-testid="visitor-name">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4 text-violet-500"/>
                   <p className="font-semibold text-slate-800">
                     {visitor.fullName}
                   </p>
+                  </div>
                 </TableCell>
                 <TableCell className="text-slate-600">{visitor.email}</TableCell>
                 <TableCell className="text-slate-600">{visitor.phoneNumber}</TableCell>
@@ -215,7 +234,7 @@ export default function VisitorTable({
                       <Pencil className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(visitor.id)}
+                      onClick={() => handleDelete(visitor.id, visitor.fullName)}
                       className="p-2 rounded-full bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -227,6 +246,34 @@ export default function VisitorTable({
           </TableRow>
         ))}
       </TableBody>
+      
+      <AlertDialog open={!!visitorToDelete} onOpenChange={(open) => !open && setVisitorToDelete(null)}>
+  <AlertDialogContent className="rounded-3xl border-0">
+    <AlertDialogHeader>
+      <div className="flex items-center gap-3 mb-2">
+        <div className="w-12 h-12 rounded-2xl bg-red-100 flex items-center justify-center flex-shrink-0">
+          <AlertTriangle className="w-6 h-6 text-red-500" />
+        </div>
+        <AlertDialogTitle className="text-xl">Delete visitor?</AlertDialogTitle>
+      </div>
+      <AlertDialogDescription className="text-slate-500">
+        This will permanently remove{" "}
+        <span className="font-semibold text-slate-700">{visitorToDelete?.name}</span>{" "}
+        from the visitor list. This action cannot be undone.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+      <AlertDialogAction
+        onClick={confirmDelete}
+        className="rounded-full bg-red-500 hover:bg-red-600 text-white"
+      >
+        Delete Visitor
+      </AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+
     </Table>
   );
 }

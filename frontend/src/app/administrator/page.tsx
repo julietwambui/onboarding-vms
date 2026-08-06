@@ -7,12 +7,17 @@ import {
   CalendarDays,
   Building2,
   Repeat,
+  AlertTriangle,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 import { apiClient } from "@/lib/apiClient";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import Link from "next/link";
+import {ArrowRight} from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 
 interface RecentActivity {
   fullName: string;
@@ -23,20 +28,30 @@ interface RecentActivity {
   } | null;
 }
 
+interface FlaggedVisitor {
+  fullName: string;
+  department: string;
+  purpose: string;
+  count: number;
+}
+
 interface OverviewData {
   todayVisitors: number;
   weeklyVisitors: number;
   mostVisitedDepartment: string;
   repeatVisitors: number;
+  flaggedVisitors: FlaggedVisitor[];
   recentActivity: RecentActivity[];
 }
 
 export default function AdminDashboard() {
+  const {checked} = useAuthGuard("ADMIN");
   const [overview, setOverview] = useState<OverviewData>({
     todayVisitors: 0,
     weeklyVisitors: 0,
     mostVisitedDepartment: "—",
     repeatVisitors: 0,
+    flaggedVisitors: [],
     recentActivity: [],
   });
 
@@ -61,7 +76,12 @@ export default function AdminDashboard() {
     <main className="space-y-8">
 
 
-      <div>
+      <div className="flex items-center gap-4">
+  <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600
+   flex items-center justify-center shadow-md">
+    <LayoutDashboard className="text-white w-7 h-7" />
+  </div>
+        <div>
         <h1 className="text-4xl font-bold text-slate-800">
           Overview
         </h1>
@@ -69,6 +89,7 @@ export default function AdminDashboard() {
         <p className="text-slate-500 mt-2">
           Welcome back, Administrator. Monitor visitor activity across the organisation.
         </p>
+      </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -154,8 +175,35 @@ export default function AdminDashboard() {
         </Card>
 
       </div>
+      
+{overview.flaggedVisitors.length > 0 && (
+  <Card className="rounded-3xl border-0 shadow-lg">
+    <CardContent className="p-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center">
+            <AlertTriangle className="w-5 h-5 text-sky-700" />
+          </div>
+          <div>
+          <h2 className="text-base font-bold text-slate-800">
+            Flagged Repeat Visitors
+          </h2>
+          <p className="text-slate-500 text-sm">
+            {overview.flaggedVisitors.length} visitor
+            {overview.flaggedVisitors.length !== 1 ? "s" : ""} flagged
+          </p>
+        </div>
+        </div>
 
-
+        <Link
+          href="/administrator/analytics"
+          className="flex items-center gap-1 text-sm font-semibold text-violet-600 hover:text-violet-700"
+        >
+          View All
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </CardContent>
+      </Card>
+)}
       <Card className="rounded-3xl border-0 shadow-lg">
         <CardContent className="p-6">
 

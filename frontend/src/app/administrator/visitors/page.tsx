@@ -2,16 +2,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { Search } from "lucide-react";
-
 import { Visitor } from "@/types/visitor";
 import { apiClient } from "@/lib/apiClient";
-
 import AdminVisitorTable from "@/components/AdminVisitorTable";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {Users} from "lucide-react";
 
 export default function AdminVisitorsPage() {
   const [visitors, setVisitors] = useState<Visitor[]>([]);
@@ -50,16 +47,20 @@ export default function AdminVisitorsPage() {
   return (
     <main>
 
-      <div className="mb-10">
+      <div className=" flex items-center gap-4 mb-10">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-violet-600 to-fuchsia-600
+         flex items-center justify-center shadow-md">
+          <Users className="text-white w-7 h-7" />
+          </div>
 
+          <div>
         <h1 className="text-4xl font-bold text-slate-800">
           Visitors
         </h1>
-
         <p className="text-slate-500 mt-2">
           View and monitor all visitor records across the organisation.
         </p>
-
+        </div>
       </div>
 
       <div className="relative max-w-md mb-8">

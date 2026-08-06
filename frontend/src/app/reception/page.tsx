@@ -18,8 +18,10 @@ import VisitorTable from "@/components/VisitorTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 export default function DashboardPage() {
+  const {checked} =useAuthGuard ("RECEPTIONIST");
   const [visitors, setVisitors] = useState<Visitor[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   

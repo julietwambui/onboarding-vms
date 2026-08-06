@@ -40,7 +40,7 @@ export default function DepartmentsPage() {
       return;
     }
     try {
-      await apiClient.post("/departments", { name: newDeptName.trim() });
+      await apiClient.authPost("/departments", { name: newDeptName.trim() });
       setNewDeptName("");
       setError("");
       setSuccess("Department added successfully");

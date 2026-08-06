@@ -50,7 +50,7 @@ export default function VisitorForm({
 
   useEffect(() => {
     if (success) {
-      router.push("/reception");
+      router.replace("/login");
     }
   }, [success, router]);
 
@@ -300,12 +300,12 @@ export default function VisitorForm({
               </Button>
               <div className="mt-6 text-center">
   <Link
-    href="/reception">
+    href="/login">
       <Button
       variant="outline"
     className="mt-6 w-full rounded-full border-violet-300 text-violet-700 hover:bg-violet-50 hover:border-violet-500"
   >
-    ← Back to Dashboard
+    ← Proceed to login
     </Button>
   </Link>
 </div>

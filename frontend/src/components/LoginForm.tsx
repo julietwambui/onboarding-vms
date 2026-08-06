@@ -56,10 +56,16 @@ export default function LoginForm() {
 
       setErrorMessage("");
 
+      if (response.user.role === "ADMIN") {
       router.push("/administrator");
+      } else if (response.user.role === "RECEPTIONIST"){
+        router.push("/reception");
+      } else {
+        setErrorMessage("Unrecognized role. Contact your administrator")
+      }
     } catch (error) {
       console.error(error);
-
+      
       setErrorMessage("Invalid email or password");
     }
   }
@@ -120,7 +126,7 @@ export default function LoginForm() {
             <div className="w-full max-w-md">
 
               <h2 className="text-3xl font-bold text-center text-gray-800">
-                Administrator Login
+                VMS Login
               </h2>
 
               <p className="text-center text-gray-500 mt-2 mb-8">

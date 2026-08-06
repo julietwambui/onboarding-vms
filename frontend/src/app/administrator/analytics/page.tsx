@@ -180,7 +180,7 @@ export default function AnalyticsPage() {
                 Flagged Frequent Visitors
               </h2>
               <p className="text-sm text-slate-500">
-                Visitors with 5+ visits to the same department for the same purpose
+                Visitors with 3+ visits to the same department for the same purpose
               </p>
             </div>
           </div>

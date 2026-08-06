@@ -95,7 +95,7 @@ export default function HomePage() {
                   className="flex items-center justify-center gap-3"
                 >
                   <ShieldCheck size={22} />
-                  Administrator
+                  Staff
                 </Link>
               </Button>
             </div>

@@ -11,7 +11,9 @@ function getAuthHeaders() {
 
 export const apiClient = {
   get:async (path:string)=>{
-    const res=await fetch(`${BASE_URL}${path}`);
+    const res=await fetch(`${BASE_URL}${path}`, {
+      headers: getAuthHeaders(),
+    });
 
     if(!res.ok){
       const text=await res.text();
@@ -24,8 +26,8 @@ export const apiClient = {
   post:async(path:string,body:unknown) =>{
     const res=await fetch(`${BASE_URL}${path}`,{
     method:"POST",
-    headers:{
-      "Content-Type":"application/json",
+    headers: {
+      "Content-Type": "application/json",
     },
     body:JSON.stringify(body),
   });
@@ -34,6 +36,22 @@ export const apiClient = {
     console.log("POST ERROR:", res.status,text);
     throw new Error(`POST ${path} failed`);
   }
+  return res.json();
+},
+
+authPost: async (path: string, body: unknown) => {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.log("AUTH POST ERROR:", res.status, text);
+    throw new Error(`POST ${path} failed`);
+  }
+
   return res.json();
 },
 

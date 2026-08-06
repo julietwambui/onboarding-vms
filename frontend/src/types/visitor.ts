@@ -24,3 +24,11 @@ export interface CreateVisitorPayload {
   departmentId: string;
   purpose: string;
 }
+
+export interface Receptionist {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+}
