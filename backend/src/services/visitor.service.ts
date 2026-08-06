@@ -286,13 +286,15 @@ export async function getFrequentVisitors() {
   > = {};
 
   for (const visitor of allVisitors) {
-    const key = `${visitor.fullName}__${visitor.departmentId}__${visitor.purpose}`;
+     const normalizedName = visitor.fullName.trim().toLowerCase();
+    const normalizedPurpose = visitor.purpose.trim().toLowerCase();
+    const key = `${normalizedName}__${visitor.departmentId}__${normalizedPurpose}`;
 
     if (!visitMap[key]) {
       visitMap[key] = {
-        fullName: visitor.fullName,
+        fullName: visitor.fullName.trim(),
         department: visitor.department?.name ?? "Unknown",
-        purpose: visitor.purpose,
+        purpose: visitor.purpose.trim(),
         count: 0,
       };
     }
