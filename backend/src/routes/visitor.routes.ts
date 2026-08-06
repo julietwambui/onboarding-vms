@@ -13,41 +13,35 @@ import {
     deleteVisitor
 } from "../controllers/visitor.controller";
 import { validateCreateVisitor } from "../middleware/validation.middleware";
+import { authenticate, authorize } from "../middleware/auth.middleware";
 
 export const visitorRouter = Router();
-visitorRouter.get("/stats/overview", getOverview
+visitorRouter.get("/stats/overview", authenticate,authorize("ADMIN"), getOverview    
 );
-visitorRouter.get("/analytics/frequent", getFrequentVisitorsAnalytics
+visitorRouter.get("/analytics/frequent", authenticate,authorize("ADMIN"), getFrequentVisitorsAnalytics
 );
 visitorRouter.get("/test", (_req, res) => {
   res.json({ message: "Visitor router is working" });
 });
-visitorRouter.get( "/analytics/weekly",getWeeklyAnalyticsController
+visitorRouter.get( "/analytics/weekly", authenticate,authorize("ADMIN"),getWeeklyAnalyticsController
 );
 
-visitorRouter.get("/analytics/departments",getDepartmentAnalyticsController
+visitorRouter.get("/analytics/departments", authenticate,authorize("ADMIN"),getDepartmentAnalyticsController
 );
 
-visitorRouter.get("/analytics/purpose", getPurposeAnalyticsController
+visitorRouter.get("/analytics/purpose",  authenticate,authorize("ADMIN"), getPurposeAnalyticsController
+);
+visitorRouter.get("/", authenticate, authorize("ADMIN", "RECEPTIONIST"), getAllVisitors);
+
+visitorRouter.post("/", validateCreateVisitor,createVisitor
 );
 
-visitorRouter.get("/", getAllVisitors);
-
-visitorRouter.post("/",
-    validateCreateVisitor,
-createVisitor
+visitorRouter.put("/:id", authenticate, authorize("RECEPTIONIST"), updateVisitor
 );
-
-visitorRouter.put("/:id", updateVisitor);
-visitorRouter.delete("/:id", deleteVisitor);
-
-
-visitorRouter.put(
-    "/:id/checkin",
-    checkInVisitor
-    
+visitorRouter.delete("/:id", authenticate, authorize("RECEPTIONIST"), deleteVisitor
 );
-visitorRouter.put(
-    "/:id/checkout",
-    checkOutVisitor
+visitorRouter.put( "/:id/checkin", authenticate, authorize("RECEPTIONIST"),checkInVisitor
+
+);
+visitorRouter.put("/:id/checkout", authenticate, authorize("RECEPTIONIST"), checkOutVisitor
 );

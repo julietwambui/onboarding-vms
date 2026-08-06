@@ -227,25 +227,9 @@ async function getMostVisitedDepartment() {
 }
 
 async function getRepeatVisitors() {
-  const visitors = await prisma.visitor.findMany({
-    select: {
-      fullName: true,
-      departmentId: true,
-      purpose: true,
-    },
-  });
-
-  const visitCounts: Record<string, number> = {};
-
-  for (const visitor of visitors) {
-    const key = `${visitor.fullName}__${visitor.departmentId}__${visitor.purpose}`;
-
-    visitCounts[key] = (visitCounts[key] || 0) + 1;
-  }
-
-  return Object.values(visitCounts).filter(
-    (count) => count >= 5
-  ).length;
+  const frequent =await getFrequentVisitors();
+  return frequent.length;
+    
 }
 
 async function getRecentActivity() {
@@ -272,6 +256,7 @@ export async function getOverviewStats() {
     weeklyVisitors: await getWeeklyVisitors(),
     mostVisitedDepartment: await getMostVisitedDepartment(),
     repeatVisitors: await getRepeatVisitors(),
+    flaggedVisitors: await getFrequentVisitors(),
     recentActivity: await getRecentActivity(),
   };
 }
@@ -316,7 +301,7 @@ export async function getFrequentVisitors() {
   }
 
   return Object.values(visitMap)
-    .filter((visitor) => visitor.count >= 5)
+    .filter((visitor) => visitor.count > 3)
     .sort((a, b) => b.count - a.count);
 }
 
