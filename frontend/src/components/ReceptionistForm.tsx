@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {Eye, EyeOff }from "lucide-react";
 
 interface ReceptionistFormProps {
   onSubmit: (data: { name: string; email: string; password: string }) => void;
@@ -13,6 +14,7 @@ export default function ReceptionistForm({ onSubmit }: ReceptionistFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword]= useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -65,13 +67,22 @@ export default function ReceptionistForm({ onSubmit }: ReceptionistFormProps) {
 
       <div>
         <Label className="mb-2 block">Password</Label>
+        <div className="relative">
         <Input
-          type="password"
+          type={showPassword ? "text" :"password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Temporary password"
           className="rounded-full h-11"
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+    >
+          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+         </button>
+       </div>
       </div>
 
       {error && (

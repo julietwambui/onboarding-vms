@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Building2, Plus, Pencil, Trash2, X, Check } from "lucide-react";
+import { Building2, Plus, Pencil, Trash2, X, Check, Users, Router} from "lucide-react";
 import { apiClient } from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 interface Department {
   id: string;
@@ -14,6 +15,7 @@ interface Department {
 }
 
 export default function DepartmentsPage() {
+  const router =useRouter();
   const [departments, setDepartments] = useState<Department[]>([]);
   const [newDeptName, setNewDeptName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -95,7 +97,7 @@ export default function DepartmentsPage() {
 
   return (
     <div>
-      {/* Header */}
+      
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
           <Building2 className="w-8 h-8 text-violet-600" />
@@ -106,7 +108,6 @@ export default function DepartmentsPage() {
         </p>
       </div>
 
-      {/* Feedback Messages */}
       {success && (
         <div className="mb-4 p-4 bg-green-50 text-green-700 rounded-xl border border-green-200">
           {success}
@@ -118,7 +119,6 @@ export default function DepartmentsPage() {
         </div>
       )}
 
-      {/* Add New Department */}
       <Card className="rounded-3xl border-0 shadow-md mb-6">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-4">
@@ -143,7 +143,6 @@ export default function DepartmentsPage() {
         </CardContent>
       </Card>
 
-      {/* Departments List */}
       <Card className="rounded-3xl border-0 shadow-md">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-4">
@@ -207,14 +206,21 @@ export default function DepartmentsPage() {
                           <p className="text-xs text-gray-400">
                             Added {new Date(dept.createdAt).toLocaleDateString()}
                           </p>
+                          <button
+                            onClick={() => router.push(`/administrator/departments/${dept.id}/members`)}
+                            className="flex items-center gap-1 text-xs font-semibold text-violet-600 hover:text-violet-700 mt-1"
+  >
+                            <Users className="w-3.5 h-3.5" />
+                           View Members
+                       </button>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => startEditing(dept)}
-                          className="p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
-                        >
+      
+                          <button onClick={()=> startEditing(dept)}
+                                className="p-2 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                                >
                           <Pencil className="w-4 h-4" />
                         </button>
                         <button

@@ -25,7 +25,20 @@ model Department {
   createdAt  DateTime  @default(now())
 
   visitors   Visitor[]
+  members    DepartmentMember[]
 }
+
+model DepartmentMember {
+  id           String     @id @default(uuid())
+  name         String
+  email        String?
+  role         String
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  visitors     Visitor[]
+  createdAt    DateTime   @default(now())
+}
+
 model Visitor {
   id        String   @id @default(uuid())
 
@@ -37,6 +50,9 @@ model Visitor {
 
   departmentId  String?
   department    Department?  @relation(fields: [departmentId], references: [id])
+
+  memberId  String?
+  member    DepartmentMember? @relation(fields: [memberId], references: [id])
 
   status    String   @default("PENDING") // PENDING, CHECKED_IN, CHECKED_OUT
 

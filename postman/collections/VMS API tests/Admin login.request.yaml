@@ -1,0 +1,34 @@
+$kind: http-request
+name: Admin login
+url: "{{baseURL}}/auth/login"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"email\": \"admin@vms.com\",\r
+
+    \  \"password\": \"admin123\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Login successful\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Token received\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \    pm.expect(response.token).to.be.a(\"string\");\r
+
+      \    pm.environment.set(\"token\", response.token);\r
+
+      });"
+    language: text/javascript
+order: 3268189328610005

@@ -17,6 +17,7 @@ import {
   Phone,
   Building2,
   ClipboardList,
+  UserCog,
 } from "lucide-react";
 
 interface AdminVisitorTableProps {
@@ -54,6 +55,10 @@ export default function AdminVisitorTable({
           </TableHead>
 
           <TableHead className="font-bold text-violet-700">
+            Assigned To
+         </TableHead>
+
+          <TableHead className="font-bold text-violet-700">
             Status
           </TableHead>
         </TableRow>
@@ -68,9 +73,7 @@ export default function AdminVisitorTable({
           >
 
             <TableCell>
-
               <div className="flex items-center gap-3">
-
                 <div className="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center">
                   <User className="w-5 h-5 text-violet-700" />
                 </div>
@@ -80,62 +83,52 @@ export default function AdminVisitorTable({
                     {visitor.fullName}
                   </p>
                 </div>
-
               </div>
-
             </TableCell>
 
             <TableCell>
-
               <div className="flex items-center gap-2 text-slate-600">
-
                 <Mail className="w-4 h-4 text-violet-500" />
-
                 {visitor.email}
-
               </div>
-
             </TableCell>
 
             <TableCell>
-
               <div className="flex items-center gap-2 text-slate-600">
-
                 <Phone className="w-4 h-4 text-violet-500" />
-
                 {visitor.phoneNumber}
-
               </div>
-
             </TableCell>
 
-
             <TableCell>
-
               <div className="flex items-center gap-2 text-slate-600">
-
                 <Building2 className="w-4 h-4 text-violet-500" />
-
                 {visitor.department?.name ?? "N/A"}
-
               </div>
-
             </TableCell>
 
             <TableCell>
-
               <div className="flex items-center gap-2 text-slate-600">
-
                 <ClipboardList className="w-4 h-4 text-violet-500" />
-
                 {visitor.purpose}
-
               </div>
-
             </TableCell>
 
             <TableCell>
+             {visitor.member ? (
+              <div className="flex items-center gap-2 text-slate-600">
+                <UserCog className="w-4 h-4 text-violet-500" />
+                <div>
+                  <p className="font-medium text-slate-700">{visitor.member.name}</p>
+                  <p className="text-xs text-slate-400">{visitor.member.role}</p>
+                </div>
+              </div>
+            ) : (
+              <span className="text-slate-400 italic text-sm">Unassigned</span>
+            )}
+          </TableCell>
 
+            <TableCell>
               <Badge
                 className={
                   visitor.status === "PENDING"
@@ -147,13 +140,9 @@ export default function AdminVisitorTable({
               >
                 {visitor.status.replace("_", " ")}
               </Badge>
-
             </TableCell>
-
           </TableRow>
-
         ))}
-
       </TableBody>
 
     </Table>

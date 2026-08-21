@@ -1,0 +1,15 @@
+$kind: http-request
+name: Health Check
+url: "{{baseURL}}/health"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Server is healthy\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      \    pm.expect(pm.response.json().status).to.eql(\"ok\");\r
+
+      });"
+    language: text/javascript
+order: 1786520672719

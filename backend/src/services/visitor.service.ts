@@ -23,6 +23,13 @@ export async function findAll(search?: string) {
           name: true,
         },
       },
+       member: {
+        select: {
+          id: true,
+          name: true,
+          role: true,
+        },
+      },
     },
     orderBy: {
       createdAt:"desc",
@@ -177,6 +184,44 @@ async function getDepartmentAnalytics() {
   return result.sort((a, b) => b.visits - a.visits);
 }
 
+async function getMemberAnalytics() {
+  const memberStats = await prisma.visitor.groupBy({
+    by: ["memberId"],
+    _count: {
+      memberId: true,
+    },
+    where: {
+      memberId: {
+        not: null,
+      },
+    },
+  });
+
+  const result = await Promise.all(
+    memberStats.map(async (item) => {
+      const member = await prisma.departmentMember.findUnique({
+        where: {
+          id: item.memberId!,
+        },
+        include: {
+          department: {
+            select: { name: true },
+          },
+        },
+      });
+
+      return {
+        member: member?.name ?? "Unknown",
+        role: member?.role ?? "Unknown",
+        department: member?.department?.name ?? "Unknown",
+        visits: item._count.memberId,
+      };
+    })
+  );
+
+  return result.sort((a, b) => b.visits - a.visits);
+}
+
 async function getPurposeAnalytics() {
   const purposes = await prisma.visitor.groupBy({
     by: ["purpose"],
@@ -315,6 +360,9 @@ export async function getDepartmentStats() {
   return await getDepartmentAnalytics();
 }
 
+export async function getMemberStats(){
+  return await getMemberAnalytics();
+}
 export async function getPurposeStats() {
   return await getPurposeAnalytics();
 }
@@ -333,6 +381,26 @@ export async function updateVisitor(
       purpose: data.purpose,
       email: data.email,
       phoneNumber:data.phoneNumber,
+    },
+  });
+}
+
+export async function assignMember(visitorId: string, memberId: string | null) {
+  const visitor = await prisma.visitor.findUnique({ where: { id: visitorId } });
+  if (!visitor) throw new Error("Visitor not found");
+
+  if (memberId){
+  const member = await prisma.departmentMember.findUnique({ where: { id: memberId } });
+  if (!member) throw new Error("Department member not found");
+  }
+
+  return await prisma.visitor.update({
+    where: { id: visitorId },
+    data: { memberId },
+    include: {
+      member: {
+        select: { name: true, role: true },
+      },
     },
   });
 }

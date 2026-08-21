@@ -1,0 +1,10 @@
+name: VMS Local
+values:
+  - key: baseURL
+    value: ''
+  - key: token
+    value: ''
+  - key: visitorId
+    value: ''
+  - key: departmentId
+    value: ''

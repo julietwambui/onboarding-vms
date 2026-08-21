@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   getDepartments,
+  getDepartment,
   addDepartment,
   editDepartment,
   removeDepartment,
@@ -12,6 +13,7 @@ const router = Router();
 
 router.get("/", getDepartments);
 
+router.get("/:id", getDepartment);
 router.post("/", authenticate, authorize("ADMIN"),addDepartment);
 
 router.put("/:id", authenticate, authorize("ADMIN"), editDepartment);

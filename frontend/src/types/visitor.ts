@@ -15,6 +15,12 @@ export interface Visitor {
     id: string;
     name: string;
   };
+
+   member?: {
+    id: string;
+    name: string;
+    role: string;
+  };
 }
 
 export interface CreateVisitorPayload {
@@ -31,4 +37,12 @@ export interface Receptionist {
   email: string;
   role: string;
   createdAt: string;
+}
+
+export interface DepartmentMember {
+  id: string;
+  name: string;
+  email: string | null;
+  role: string;
+  departmentId: string;
 }

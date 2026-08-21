@@ -50,7 +50,7 @@ export default function VisitorForm({
 
   useEffect(() => {
     if (success) {
-      router.replace("/login");
+      router.push("/register/success");
     }
   }, [success, router]);
 
@@ -297,18 +297,20 @@ export default function VisitorForm({
                 {isSubmitting
                   ? "Registering..."
                   : "Register Visitor"}
-              </Button>
-              <div className="mt-6 text-center">
-  <Link
-    href="/login">
-      <Button
+                  </Button>
+
+                  <div className="mt-2 text-center">
+  <Link href="/login">
+    <Button
       variant="outline"
-    className="mt-6 w-full rounded-full border-violet-300 text-violet-700 hover:bg-violet-50 hover:border-violet-500"
-  >
-    ← Proceed to login
+      className="w-full rounded-full border-violet-300 text-violet-700 hover:bg-violet-50 hover:border-violet-500"
+    >
+      ← Staff Login
     </Button>
   </Link>
 </div>
+
+      
             </form>
           </div>
         </div>

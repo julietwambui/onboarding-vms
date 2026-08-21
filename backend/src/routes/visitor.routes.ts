@@ -8,8 +8,10 @@ import {
     getFrequentVisitorsAnalytics,
     getWeeklyAnalyticsController,
     getDepartmentAnalyticsController,
+    getMemberAnalyticsController,
     getPurposeAnalyticsController,
     updateVisitor,
+    assignVisitorMember,
     deleteVisitor
 } from "../controllers/visitor.controller";
 import { validateCreateVisitor } from "../middleware/validation.middleware";
@@ -26,6 +28,8 @@ visitorRouter.get("/test", (_req, res) => {
 visitorRouter.get( "/analytics/weekly", authenticate,authorize("ADMIN"),getWeeklyAnalyticsController
 );
 
+visitorRouter.get("/analytics/members", authenticate, authorize("ADMIN"), getMemberAnalyticsController
+);
 visitorRouter.get("/analytics/departments", authenticate,authorize("ADMIN"),getDepartmentAnalyticsController
 );
 
@@ -38,6 +42,7 @@ visitorRouter.post("/", validateCreateVisitor,createVisitor
 
 visitorRouter.put("/:id", authenticate, authorize("RECEPTIONIST"), updateVisitor
 );
+visitorRouter.put("/:id/assign", authenticate, authorize("RECEPTIONIST"), assignVisitorMember);
 visitorRouter.delete("/:id", authenticate, authorize("RECEPTIONIST"), deleteVisitor
 );
 visitorRouter.put( "/:id/checkin", authenticate, authorize("RECEPTIONIST"),checkInVisitor

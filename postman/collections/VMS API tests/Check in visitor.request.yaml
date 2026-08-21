@@ -1,0 +1,23 @@
+$kind: http-request
+name: Check in visitor
+url: "{{baseURL}}/visitors/{{visitorId}}/checkin"
+method: PUT
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Check in successful\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Status is CHECKED_IN\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \    pm.expect(response.status).to.eql(\"CHECKED_IN\");\r
+
+      });\r\n"
+    language: text/javascript
+order: 4372678716030819

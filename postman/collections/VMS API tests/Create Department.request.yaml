@@ -1,0 +1,44 @@
+$kind: http-request
+name: Create Department
+url: "{{baseURL}}/departments"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"Newman Test Department\"\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Department created successfully\", function () {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Department has correct name\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \    pm.expect(response.name).to.eql(\"Newman Test Department\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Save department ID\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \    pm.environment.set(\"departmentId\", response.id);\r
+
+      });"
+    language: text/javascript
+order: 1922217418491244

@@ -8,7 +8,9 @@ import {
   getFrequentVisitors as getFrequentVisitorsService,
   getWeeklyAnalytics,
   getDepartmentStats,
+  getMemberStats,
   getPurposeStats,
+  assignMember as assignMemberService,
   updateVisitor as updateVisitorService,
   deleteVisitor as deleteVisitorService,
 }from "../services/visitor.service";
@@ -146,6 +148,23 @@ export async function getDepartmentAnalyticsController(
   }
 }
 
+export async function getMemberAnalyticsController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const members = await getMemberStats();
+
+    res.status(200).json(members);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to fetch member analytics",
+    });
+  }
+}
+
 export async function getPurposeAnalyticsController(
   req: Request,
   res: Response
@@ -175,6 +194,31 @@ export async function updateVisitor(req: Request, res: Response) {
       return res.status(404).json({ message: error.message });
     }
     return res.status(500).json({ message: "Failed to update visitor" });
+  }
+}
+
+export async function assignVisitorMember(req: Request, res: Response) {
+  try {
+    const id = req.params.id as string;
+    const { memberId } = req.body;
+
+    if (!memberId === undefined) {
+      return res.status(400).json({ message: "memberId is required (use null to unassign" });
+    }
+
+    const updated = await assignMemberService(id, memberId);
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error("Error assigning member:", error);
+
+    if (
+      error instanceof Error &&
+      (error.message === "Visitor not found" || error.message === "Department member not found")
+    ) {
+      return res.status(404).json({ message: error.message });
+    }
+
+    return res.status(500).json({ message: "Failed to assign member" });
   }
 }
 

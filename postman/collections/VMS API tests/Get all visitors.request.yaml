@@ -1,0 +1,33 @@
+$kind: http-request
+name: Get all visitors
+url: "{{baseURL}}/visitors"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Returns array of visitors\", function () {\r
+
+      \    pm.expect(pm.response.json()).to.be.an(\"array\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Array is not empty\", function () {\r
+
+      \    pm.expect(pm.response.json().length).to.be.above(0);\r
+
+      });"
+    language: text/javascript
+order: 4267571206229447

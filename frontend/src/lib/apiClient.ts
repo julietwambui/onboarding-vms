@@ -32,9 +32,9 @@ export const apiClient = {
     body:JSON.stringify(body),
   });
   if(!res.ok){
-    const text=await res.text();
-    console.log("POST ERROR:", res.status,text);
-    throw new Error(`POST ${path} failed`);
+    const data=await res.json().catch(() =>({}));
+    console.log("POST ERROR:", res.status, data);
+    throw new Error(data.message || `POST ${path} failed`);
   }
   return res.json();
 },

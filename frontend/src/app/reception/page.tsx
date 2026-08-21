@@ -56,6 +56,11 @@ export default function DashboardPage() {
   fetchVisitors();
 }
 
+async function handleAssign(id: string, memberId: string) {
+  await apiClient.put(`/visitors/${id}/assign`, { memberId });
+  fetchVisitors();
+}
+
 async function handleDelete(id: string) {
   await apiClient.delete(`/visitors/${id}`);
   fetchVisitors();
@@ -240,6 +245,7 @@ async function handleDelete(id: string) {
               onCheckOut={handleCheckOut}
                onDelete={handleDelete}
               onEdit={handleEdit}
+              onAssign={handleAssign}
             />
           )}
         </CardContent>

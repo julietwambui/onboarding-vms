@@ -1,0 +1,58 @@
+$kind: http-request
+name: Register Visitor
+url: "{{baseURL}}/visitors"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"fullName\": \"Newman Test Visitor\",\r
+
+    \  \"purpose\": \"API Testing\",\r
+
+    \  \"email\": \"newman@test.com\",\r
+
+    \  \"phoneNumber\": \"0712345678\",\r
+
+    \  \"departmentId\": \"{{departmentId}}\"\r
+
+    }"
+scripts:
+  - type: beforeRequest
+    code: "pm.test(\"Visitor created successfully\", function () {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Visitor has PENDING status\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \    pm.expect(response.status).to.eql(\"PENDING\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Visitor fullName is correct\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \    pm.expect(response.fullName).to.eql(\"Newman Test Visitor\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Save visitor ID\", function () {\r
+
+      \    const response = pm.response.json();\r
+
+      \    pm.environment.set(\"visitorId\", response.id);\r
+
+      });"
+    language: text/javascript
+order: 4142167969688820

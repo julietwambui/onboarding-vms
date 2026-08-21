@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff} from "lucide-react";
 
 interface LoginFormData {
   email: string;
@@ -29,7 +29,7 @@ interface LoginResponse {
 
 export default function LoginForm() {
   const router = useRouter();
-
+  const [showPassword, setShowPassword]=useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
@@ -65,8 +65,9 @@ export default function LoginForm() {
       }
     } catch (error) {
       console.error(error);
-      
-      setErrorMessage("Invalid email or password");
+      setErrorMessage(
+        error instanceof Error ? error.message :"Invalid email or password"
+      );
     }
   }
 
@@ -77,18 +78,12 @@ export default function LoginForm() {
 
         <div className="grid md:grid-cols-2">
 
-          {/* LEFT PANEL */}
 
           <div className="relative bg-white p-12 overflow-hidden">
 
-            {/* Decorative Shapes */}
-
             <div className="absolute -top-28 right-0 w-72 h-72 bg-violet-300 rounded-bl-full"></div>
-
             <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-300 rounded-tr-full"></div>
-
             <div className="absolute top-20 left-20 w-24 h-24 rounded-full bg-pink-200"></div>
-
             <div className="relative z-10">
 
               <h1 className="text-2xl font-bold text-gray-800 mb-12">
@@ -108,18 +103,12 @@ export default function LoginForm() {
               <div className="mt-12 space-y-4 text-gray-700">
 
                 <p>✔ Secure Authentication</p>
-
                 <p>✔ Visitor Monitoring</p>
-
                 <p>✔ Reception Dashboard</p>
 
               </div>
-
             </div>
-
           </div>
-
-          {/* RIGHT PANEL */}
 
           <div className="flex items-center justify-center bg-gray-50 p-12">
 
@@ -180,15 +169,21 @@ export default function LoginForm() {
 
                     <Input
                       id="password"
-                      type="password"
+                      type={showPassword ? "text" :"password"}
                       placeholder="Enter your password"
-                      className="h-14 rounded-full pl-12"
+                      className="h-14 rounded-full pl-12 pr-12"
                       {...register("password", {
                         required: "Password is required",
                       })}
                     />
-
-                  </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+  >
+                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                   </div>
 
                   {errors.password && (
                     <p className="text-red-500 text-sm mt-2">

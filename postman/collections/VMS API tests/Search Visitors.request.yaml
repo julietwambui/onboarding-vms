@@ -1,0 +1,35 @@
+$kind: http-request
+name: Search Visitors
+url: "{{baseURL}}/visitors?search=Newman"
+method: GET
+queryParams:
+  search: Newman
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Search results contain Newman\", function () {\r
+
+      \    const visitors = pm.response.json();\r
+
+      \    pm.expect(visitors.length).to.be.above(0);\r
+
+      \    visitors.forEach(function(visitor) {\r
+
+      \        pm.expect(visitor.fullName.toLowerCase()).to.include(\"newman\");\r
+
+      \    });\r
+
+      });"
+    language: text/javascript
+order: 4344020624487049

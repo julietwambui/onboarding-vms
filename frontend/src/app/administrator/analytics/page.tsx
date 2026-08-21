@@ -16,7 +16,7 @@ import {
  Cell,
  Legend,
 } from "recharts";
-import { BarChart3, TrendingUp, Building2, Target } from "lucide-react";
+import { BarChart3, TrendingUp, Building2, Target, UserCog } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { apiClient } from "@/lib/apiClient";
@@ -27,6 +27,13 @@ interface WeeklyData {
 }
 
 interface DepartmentData {
+  department: string;
+  visits: number;
+}
+
+interface MemberData {
+  member: string;
+  role: string;
   department: string;
   visits: number;
 }
@@ -42,21 +49,23 @@ export default function AnalyticsPage() {
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
   const [departmentData, setDepartmentData] = useState<DepartmentData[]>([]);
   const [frequentVisitors, setFrequentVisitors] = useState<FrequentVisitor[]>([]);
+  const [memberData, setMemberData] = useState<MemberData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchAll() {
       try {
-        const [weekly, departments, frequent] = await Promise.all([
+        const [weekly, departments, frequent, members] = await Promise.all([
           apiClient.get("/visitors/analytics/weekly"),
           apiClient.get("/visitors/analytics/departments"),
-    
           apiClient.get("/visitors/analytics/frequent"),
+          apiClient.get("/visitors/analytics/members"),
         ]);
 
         setWeeklyData(weekly.data ?? weekly);
         setDepartmentData(departments.data ?? departments);
         setFrequentVisitors(frequent.data ?? frequent);
+         setMemberData(members.data ?? members);
       } catch (error) {
         console.error("Failed to fetch analytics:", error);
       } finally {
@@ -245,6 +254,79 @@ export default function AnalyticsPage() {
           )}
         </CardContent>
       </Card>
+
+      <Card className="rounded-3xl border-0 shadow-md">
+        <CardContent className="p-6">
+         <div className="flex items-center gap-3 mb-6">
+           <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center">
+             <UserCog className="w-5 h-5 text-sky-600" />
+      </div>
+      <div>
+        <h2 className="text-xl font-bold text-slate-800">
+          Visitors by Staff Member
+        </h2>
+        <p className="text-sm text-slate-500">
+          Total visitors seen per assigned staff member
+        </p>
+      </div>
+    </div>
+
+    {memberData.length === 0 ? (
+      <div className="text-center py-10">
+        <p className="text-slate-400">
+          No visitors have been assigned to staff members yet
+        </p>
+      </div>
+    ) : (
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="text-left py-3 font-semibold text-slate-600">
+                Staff Member
+              </th>
+              <th className="text-left py-3 font-semibold text-slate-600">
+                Role
+              </th>
+              <th className="text-left py-3 font-semibold text-slate-600">
+                Department
+              </th>
+              <th className="text-left py-3 font-semibold text-slate-600">
+                Visitors Seen
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {memberData.map((item, index) => (
+              <tr
+                key={index}
+                className="border-b last:border-0 hover:bg-sky-50 transition-colors"
+              >
+                <td className="py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-sky-200 flex items-center justify-center font-bold text-sky-700">
+                      {item.member.charAt(0)}
+                    </div>
+                    <span className="font-semibold text-slate-800">
+                      {item.member}
+                    </span>
+                  </div>
+                </td>
+                <td className="py-4 text-slate-600">{item.role}</td>
+                <td className="py-4 text-slate-600">{item.department}</td>
+                <td className="py-4">
+                  <Badge className="bg-sky-100 text-sky-700 hover:bg-sky-100 px-3">
+                    {item.visits} visitors
+                  </Badge>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </CardContent>
+</Card>
 
     </div>
   );

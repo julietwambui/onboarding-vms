@@ -18,6 +18,18 @@ export async function findAllDepartments() {
   });
 }
 
+export async function findDepartmentById(id: string) {
+  const department = await prisma.department.findUnique({
+    where: { id },
+  });
+
+  if (!department) {
+    throw new Error("Department not found");
+  }
+
+  return department;
+}
+
 export async function createDepartment(data: { name: string }) {
   return await prisma.department.create({
     data: {
